@@ -15,35 +15,35 @@ from models.state import State
 from models.user import User
 
 
-def parse_line(line):
-    '''parse_line function.
-
-    Description: Gets a line and then parses it, then returns an array
-    containing:
-        The class name (string) (Always first element in array)
-        The method name (string) (Always second element in array)
-        The ID (string) (If available)
-        The attribute name (string) (If available)
-        The attribute value (string) (If available)
-    '''
-    result = []
-    parameters = []
-    args = line.split('.')
-    if len(args) <= 1:
-        return result
-    else:
-        class_name = args[0].strip()
-        args = args[1].split('(')
-        method_name = args[0].strip()
-        args = args[1].split(',')
-        result.extend([class_name, method_name])
-        for i in range(len(args)):
-            elem = args[i].strip(')')
-            parameters.append(elem)
-        for j in range(len(parameters)):
-            elem = parameters[j]
-            result.append((elem.strip()).strip('"'))
-    return result
+# def parse_line(line):
+#    '''parse_line function.
+#
+#    Description: Gets a line and then parses it, then returns an array
+#    containing:
+#        The class name (string) (Always first element in array)
+#        The method name (string) (Always second element in array)
+#        The ID (string) (If available)
+#        The attribute name (string) (If available)
+#        The attribute value (string) (If available)
+#    '''
+#    result = []
+#    parameters = []
+#    args = line.split('.')
+#    if len(args) <= 1:
+#        return result
+#    else:
+#        class_name = args[0].strip()
+#        args = args[1].split('(')
+#        method_name = args[0].strip()
+#        args = args[1].split(',')
+#        result.extend([class_name, method_name])
+#        for i in range(len(args)):
+#            elem = args[i].strip(')')
+#            parameters.append(elem)
+#        for j in range(len(parameters)):
+#            elem = parameters[j]
+#            result.append((elem.strip()).strip('"'))
+#    return result
 
 
 class HBNBCommand(cmd.Cmd):
@@ -56,48 +56,70 @@ class HBNBCommand(cmd.Cmd):
         '''
         pass
 
-    def default(self, line):
-        '''Defines the default behaviour of the program
-        '''
-        args = line.split()
-        command = args[0].strip()
-        line_str = ' '.join(args[1:])
-        try:
-            func = getattr(self, 'do_' + command)
-        except AttributeError:
-            print(f"*** Unknown syntax: {command}")
-            return False
-        response = func(line_str)
-        if response is None:
-            return False
-        if response is True:
-            return True
 
-    def onecmd(self, line):
-        '''Called when anything is passed in response to the prompt
-        '''
-        if line != '':
-            line_args = parse_line(line)
-            args_str = ''
-            if line_args != []:
-                if len(line_args) == 3:
-                    class_name, method, inst_id = line_args
-                    args_str = ' '.join([class_name, inst_id])
-                elif len(line_args) == 4:
-                    class_name, method, inst_id, attr = line_args
-                    args_str = ' '.join([class_name, inst_id, attr])
-                elif len(line_args) == 5:
-                    class_name, method, inst_id, attr, val = line_args
-                    args_str = ' '.join([class_name, inst_id, attr, val])
-            else:
-                return self.default(line)
-            try:
-                func = getattr(self, 'do_' + method)
-            except AttributeError:
-                print(f"Attribute Not Found: {'do_' + method}")
-            return func(args_str)
-        else:
-            return self.emptyline()
+#    def default(self, line):
+#        '''Defines the default behaviour of the program
+#        '''
+#        args = line.split()
+#        command = args[0].strip()
+#        line_str = ' '.join(args[1:])
+#        try:
+#            func = getattr(self, 'do_' + command)
+#        except AttributeError:
+#            print(f"*** Unknown syntax: {command}")
+#            return False
+#        response = func(line_str)
+#        if response is None:
+#            return False
+#        if response is True:
+#            return True
+
+
+    def precmd(self, line):
+        is_match = re.match(r'''^[\s]*[A-Z][a-z]+[.][a-z]+\(["]?[-a-z0-9]*["]?[,]?[\s\w}\0-9{""'',:]*\)''', line)
+        if is_match is not None:
+            command = ""
+            mthd = re.search(r'''(?<=[.])[a-z]*[a-z](?=\()''', line)
+            if mthd is not None:
+                command += " " + mthd.group(0)
+            model = re.search(r'''^[A-Z][a-z]+[a-z](?=[.])''', line)
+            if model is not None:
+                command += " " + model.group(0)
+            args = re.search(r'''(?<=\()(.)*(?=\))''', line)
+            if args is not None:
+#                args = args.group(0).split(" ")
+                print(type(args.group()))
+                command += " " + args.group()
+            print(command.strip())
+            return ""
+        return line
+
+#    def onecmd(self, line):
+#        '''Called when anything is passed in response to the prompt
+#        '''
+#        if line != '':
+#            line_args = parse_line(line)
+#            line_args = line
+#            args_str = ''
+#            if line_args != []:
+#                if len(line_args) == 3:
+#                    class_name, method, inst_id = line_args
+#                    args_str = ' '.join([class_name, inst_id])
+#                elif len(line_args) == 4:
+#                    class_name, method, inst_id, attr = line_args
+#                    args_str = ' '.join([class_name, inst_id, attr])
+#                elif len(line_args) == 5:
+#                    class_name, method, inst_id, attr, val = line_args
+#                    args_str = ' '.join([class_name, inst_id, attr, val])
+#            else:
+#                return self.default(line)
+#            try:
+#                func = getattr(self, 'do_' + method)
+#            except AttributeError:
+#                print(f"Attribute Not Found: {'do_' + method}")
+#            return func(args_str)
+#        else:
+#            return self.emptyline()
 
     def do_quit(self, line):
         '''Quit command to exit the program
@@ -201,6 +223,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         '''Updates an instance based on a class name and id.
         '''
+        print(line)
         args = line.split()
         if len(args) >= 1:
             class_name = args[0]
