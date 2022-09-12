@@ -9,6 +9,6 @@ footer {
     border-top: 1px solid #CCCCCC;
 
     /* Places footer at the bottom of the page */
-    position: absolute;
+    position: fixed;
     bottom: 0px;
 }
