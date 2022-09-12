@@ -8,6 +8,8 @@ header {
     border-color: #CCCCCC;
 }
 
+/* Styling for logo placed at top left corner of page */
+
 .logo {
     background-image: url("../images/logo.png");
     background-size: contain;
