@@ -39,6 +39,12 @@ div.price_by_night {
     height: 60px;
     font-size: 30px;
     text-align: center;
+    vertical-align: middle;
+    display: flex;
+}
+
+div.price_by_night p{
+    margin: auto;
 }
 
 div.information {

@@ -6,8 +6,7 @@ footer {
     vertical-align: middle;
     height: 60px;
     width: 100%;
-
+    position: fixed;
+    bottom: 0;
     /* Places footer at the bottom of the page */
-    position: absolute;
-    bottom: 0px;
 }
