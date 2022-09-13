@@ -7,8 +7,9 @@ footer {
     height: 60px;
     width: 100%;
     border-top: 1px solid #CCCCCC;
-
-    /* Places footer at the bottom of the page */
-    position: absolute;
+    position: fixed;
     bottom: 0px;
+    /* Places footer at the bottom of the page */
+    display: flex;
+    justify-content: center;
 }
