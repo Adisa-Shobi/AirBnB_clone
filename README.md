@@ -51,7 +51,7 @@ $
 | all     | Prints all string representation of all instances based or not on the classname|
 | update  | Updates an instance based on the class name and id by adding/updating attribute|
 ## Console Shorthand
-The console also uses a regex engine to allow you interact with it using shprthand.
+The console also uses a regex engine to allow you interact with it using shorthand.
 ### Format:
 ```
 <Class Name>.<command>(<id>, parameters...)
